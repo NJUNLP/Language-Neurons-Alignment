@@ -1,0 +1,15 @@
+torch==2.4.0
+vllm==0.5.4
+transformers>=4.43.2,<4.58
+tokenizers>=0.19.1,<0.20
+safetensors>=0.4.3
+numpy==1.26.4
+pandas>=2.2,<2.4
+tqdm>=4.66
+pyyaml>=6.0
+sentencepiece>=0.1.99
+loguru>=0.7.2
+matplotlib>=3.8,<3.10
+seaborn>=0.13,<0.14
+outlines==0.0.46
+datasets==4.4.1

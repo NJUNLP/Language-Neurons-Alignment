@@ -1,0 +1,13 @@
+__pycache__/
+*.pt
+*.bin
+*.safetensors
+*.jsonl
+*.log
+activations/
+activation_masks/
+ppl_maps/
+*.ipynb_checkpoints
+.DS_Store
+.env
+.venv
