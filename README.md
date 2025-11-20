@@ -34,7 +34,7 @@ Language-Neurons-Alignment/
 │── activation_masks/      # generated masks
 │── ppl_maps/              # PPL heatmaps
 │── datasets/              # mgsm.json, etc.
-│── language_neuron_detection/
+│── language_neurons_alignment/
 │   │── activation.py
 │   │── analysis.py
 │   │── autosweep.py
@@ -53,7 +53,7 @@ Language-Neurons-Alignment/
 All commands use:
 
 ```
-python -m language_neuron_detection.cli <command> [...options...]
+python -m language_neurons_alignment.cli <command> [...options...]
 ```
 
 ------
@@ -63,7 +63,7 @@ python -m language_neuron_detection.cli <command> [...options...]
 Collect **full** and **prefix** activations per language:
 
 ```
-python -m language_neuron_detection.cli activation \
+python -m language_neurons_alignment.cli activation \
   --model-name Mistral \
   --model-path /ABS/PATH/TO/MODEL \
   -l en \
@@ -84,7 +84,7 @@ en, zh, es, fr, de, ja, ru, bn, th, sw
 This step performs **binary search** over λ:
 
 ```
-python -m language_neuron_detection.cli autosweep \
+python -m language_neurons_alignment.cli autosweep \
   --model-name Mistral \
   --model-path /ABS/PATH/TO/MODEL \
   -r 0.01 \
@@ -108,7 +108,7 @@ best λ = 0.019625
 Insert the λ from AutoSweep:
 
 ```
-python -m language_neuron_detection.cli identify \
+python -m language_neurons_alignment.cli identify \
   --model-name Mistral \
   --model-path /ABS/PATH/TO/MODEL \
   -r 0.01 \
@@ -130,7 +130,7 @@ activation_masks/mgsm/0.01-<lambda>/mask.Mistral-<tag>
 Use the **same** λ:
 
 ```
-python -m language_neuron_detection.cli ppl \
+python -m language_neurons_alignment.cli ppl \
   --model-name Mistral \
   --model-path /ABS/PATH/TO/MODEL \
   -r 0.01 \
@@ -152,14 +152,14 @@ ppl_maps/mgsm/0.01-<lambda>/ppl.Mistral-<tag>.png
 ```
 # 1. Activation extraction
 for L in en zh es fr de ja ru bn th sw; do
-  python -m language_neuron_detection.cli activation \
+  python -m language_neurons_alignment.cli activation \
     --model-path /ABS/PATH/TO/MODEL \
     -l $L -d datasets/mgsm.json -s mgsm
 done
 
 # 2. AutoSweep to find λ*
 LAM=$(python - <<EOF
-from language_neuron_detection.autosweep import quick_autosweep
+from language_neurons_alignment.autosweep import quick_autosweep
 print(quick_autosweep(
   model_name="Mistral",
   model_path="/ABS/PATH/TO/MODEL",
@@ -171,12 +171,12 @@ EOF
 )
 
 # 3. Identify by λ*
-python -m language_neuron_detection.cli identify \
+python -m language_neurons_alignment.cli identify \
   --model-path /ABS/PATH/TO/MODEL \
   -r 0.01 -l $LAM -s mgsm
 
 # 4. PPL masked evaluation
-python -m language_neuron_detection.cli ppl \
+python -m language_neurons_alignment.cli ppl \
   --model-path /ABS/PATH/TO/MODEL \
   -r 0.01 -l $LAM \
   -s mgsm -d datasets/mgsm.json
