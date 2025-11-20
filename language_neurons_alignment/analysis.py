@@ -142,7 +142,7 @@ class Neuron_Mask:
         count appear[0..K]
         """
         K = len(self.langs)
-        if not self.ddmask_data:
+        if not self.mask_data:
             return [0] * (K + 1)
 
         L = max(len(lang_layers) for lang_layers in self.mask_data)
