@@ -158,17 +158,24 @@ for L in en zh es fr de ja ru bn th sw; do
 done
 
 # 2. AutoSweep to find λ*
-LAM=$(python - <<EOF
-from language_neurons_alignment.autosweep import quick_autosweep
-print(quick_autosweep(
+AUTOSWEEP_OUT=$(
+python - <<'PY'
+from language_neurons_alignment.autosweep import autosweep_lambda
+autosweep_lambda(
   model_name="Mistral",
-  model_path="/ABS/PATH/TO/MODEL",
+  model_path=/ABS/PATH/TO/MODEL,
   dataset="mgsm",
   toprate=0.01,
-  lo=0.0, hi=0.2, eps=1e-3
-))
-EOF
+  lo_init=0.0,
+  hi_init=0.2,
+  eps=1e-3,
 )
+PY
+)
+
+LAM=$(printf "%s\n" "$AUTOSWEEP_OUT" | grep "Best lambda" | awk '{print $NF}')
+
+echo "[workflow] lambda = $LAM"
 
 # 3. Identify by λ*
 python -m language_neurons_alignment.cli identify \
